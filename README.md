@@ -1,4 +1,4 @@
-### Indexes in MongoDB
+## Indexes in MongoDB
 
 Here I'm gonna show a simple hands-on experience creating indexes in MongoDB. There is a good documentation about indexing strategies, please take a look at URL below before running this hands-on:
 
