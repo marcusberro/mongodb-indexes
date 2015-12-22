@@ -220,7 +220,7 @@ Take a look at one document:
 
 #### There is 3 ways to check details about query execution:
 
-> explain() is nice to check winningPlan and rejectedPlans
+explain() is nice to check winningPlan and rejectedPlans
 ```javascript
 > db.folks.find({"name.first":"melvin"}).explain()
 {
@@ -254,7 +254,7 @@ Take a look at one document:
 }
 ```
 
-> Using explain("executionStats") you can check details on each query step: 
+Using explain("executionStats") you can check details on each query step: 
  - nReturned : returned documents in a step
  - executionTimeMillis: execution time in a step
  - totalKeysExamined: number of keys examined in all step
@@ -321,7 +321,7 @@ Take a look at one document:
 }
 ```
 
-> explain("allPlansExecution") show all information above
+explain("allPlansExecution") show all information above
 ```javascript
 > db.folks.find({"name.first":"melvin"}).explain("allPlansExecution")
 {
@@ -584,7 +584,7 @@ Here we have a new SORT stage and stil have a "COLLSCAN" stage:
 }
 ```
 
-> Create index 
+#### Create index 
 > db.folks.createIndex({"location.city":1})
 
 Try again with index and check that COLLSCAN stage gone and we have a new "IXSCAN" stage:
@@ -690,7 +690,7 @@ Try these. They are going to use last index created:
 > db.folks.find({"location.city":"preston","name.first":"lewis"}).sort({"email":1}).explain("executionStats")
 
 
-> Create a new index 
+#### Create a new index 
 > db.folks.createIndex({"location.city":1, "name.first":1})
 
 This one uses first index:
@@ -713,7 +713,7 @@ None of these are going to use last indexes created:
 > db.folks.find({name: {title: "mr", first: "melvin", last:"lynch"}}).explain("executionStats")
 
 
-> Create index 
+#### Create index 
 > db.folks.createIndex({"name":1})
 
 #### Odd
@@ -812,7 +812,7 @@ Try these without index:
 
 > db.folkstest.find({contactNumbers:{$in:["0721-229-194","0786-591-470"]}},{_id:0,contactNumbers:1}).explain("allPlansExecution")
 
-> Create index 
+#### Create index 
 > db.folkstest.createIndex({"contactNumbers":1})
 
 Try those queries again and check that we have IXSCAN stages
@@ -888,8 +888,10 @@ You can use regular expression:
 
 or text index:
 
+#### Create index
 > db.chuckjokes.createIndex({joke:"text"})
 
+Try query by text:
 > db.chuckjokes.find({$text:{$search:"need"}}).explain("allPlansExecution")
 
 It was weird for me cause I got a better performance with regexp rather than text index in my 500k db. But, I guess that index is getting better when database grows. Any thoughts?
