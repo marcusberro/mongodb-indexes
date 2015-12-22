@@ -1,4 +1,4 @@
-Indexes in MongoDB
+### Indexes in MongoDB
 
 Here I'm gonna show a simple hands-on experience creating indexes in MongoDB. There is a good documentation about indexing strategies, please take a look at URL below before running this hands-on:
 
@@ -125,7 +125,7 @@ Expected
 ...
 ```
 
-We are going to do that using Aggregation Framework sending the result to other collections called folks:
+We are going to change documents using Aggregation Framework sending the result to other collections called folks:
 ```javascript
 db.people.aggregate(
 [
@@ -218,7 +218,7 @@ Take a look at one document:
 }
 ```
 
-There is 3 ways to check details about query execution:
+#### There is 3 ways to check details about query execution:
 
 > explain() is nice to check winningPlan and rejectedPlans
 ```javascript
@@ -254,14 +254,13 @@ There is 3 ways to check details about query execution:
 }
 ```
 
-Using explain("executionStats") you can check details on each query step: 
+> Using explain("executionStats") you can check details on each query step: 
  - nReturned : returned documents in a step
  - executionTimeMillis: execution time in a step
  - totalKeysExamined: number of keys examined in all step
  - totalDocsExamined: number of documents examined in all steps
  - stage "COLLSCAN": it's not using index. That's a potential candidate for index
  - docsExamined: number of documents examined in a step
-
 ```javascript
 > db.folks.find({"name.first":"melvin"}).explain("executionStats")
 {
@@ -322,7 +321,7 @@ Using explain("executionStats") you can check details on each query step:
 }
 ```
 
-explain("allPlansExecution") show all information above
+> explain("allPlansExecution") show all information above
 ```javascript
 > db.folks.find({"name.first":"melvin"}).explain("allPlansExecution")
 {
@@ -384,7 +383,7 @@ explain("allPlansExecution") show all information above
 }
 ```
 
-Size of indexes
+### Size of indexes
 ```javascript
 > db.folks.stats()
 {
@@ -585,7 +584,7 @@ Here we have a new SORT stage and stil have a "COLLSCAN" stage:
 }
 ```
 
-Create index 
+> Create index 
 > db.folks.createIndex({"location.city":1})
 
 Try again with index and check that COLLSCAN stage gone and we have a new "IXSCAN" stage:
@@ -691,7 +690,7 @@ Try these. They are going to use last index created:
 > db.folks.find({"location.city":"preston","name.first":"lewis"}).sort({"email":1}).explain("executionStats")
 
 
-Create a new index 
+> Create a new index 
 > db.folks.createIndex({"location.city":1, "name.first":1})
 
 This one uses first index:
@@ -714,10 +713,10 @@ None of these are going to use last indexes created:
 > db.folks.find({name: {title: "mr", first: "melvin", last:"lynch"}}).explain("executionStats")
 
 
-Create index 
+> Create index 
 > db.folks.createIndex({"name":1})
 
-# Odd
+#### Odd
 Sometimes it not worth it cause we don't have all document as query criteria
 
 
@@ -813,7 +812,7 @@ Try these without index:
 
 > db.folkstest.find({contactNumbers:{$in:["0721-229-194","0786-591-470"]}},{_id:0,contactNumbers:1}).explain("allPlansExecution")
 
-Create index 
+> Create index 
 > db.folkstest.createIndex({"contactNumbers":1})
 
 Try those queries again and check that we have IXSCAN stages
